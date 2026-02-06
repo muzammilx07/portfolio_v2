@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import ThemeToggle from "./ThemeToggle";
 import { navigation } from "@/config/navigation";
@@ -12,10 +13,11 @@ export default function Navbar() {
       <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-3 sm:px-6">
         <Link
           href="/"
-          className="text-sm font-semibold tracking-tight text-foreground"
+          className="flex items-center gap-3 text-sm font-semibold tracking-tight text-foreground"
           aria-label={`${siteConfig.name} home`}
         >
-          {siteConfig.name}
+          
+          <span>{siteConfig.name}</span>
         </Link>
 
         <div className="flex items-center gap-3 sm:gap-5">
@@ -31,6 +33,16 @@ export default function Navbar() {
               </li>
             ))}
           </ul>
+          <button
+            type="button"
+            className="hidden items-center gap-3 rounded-lg border border-border bg-muted/40 px-3 py-1 text-xs text-muted-foreground transition hover:bg-muted md:flex"
+            aria-label="Open search"
+          >
+            <span>Search</span>
+            <span className="rounded border border-border px-1.5 py-0.5 text-[10px] text-muted-foreground">
+              Ctrl K
+            </span>
+          </button>
           <ThemeToggle />
         </div>
       </div>

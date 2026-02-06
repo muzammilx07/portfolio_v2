@@ -36,7 +36,7 @@ export default function RootLayout({
         className={`min-h-screen bg-background text-foreground antialiased ${geistSans.variable} ${geistMono.variable}`}
       >
         <Providers>
-          <div className="mx-auto flex min-h-screen max-w-4xl flex-col">
+          <div className="mx-auto flex min-h-screen max-w-3xl flex-col">
             <header>
               <Navbar />
             </header>

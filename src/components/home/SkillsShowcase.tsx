@@ -13,8 +13,8 @@ const skills = [
 
 export default function SkillsShowcase() {
   return (
-    <section className="bg-background px-6 py-16 text-foreground">
-      <div className="mx-auto max-w-4xl space-y-6">
+    <section className="bg-background px-4 py-10 text-foreground sm:px-6 sm:py-12">
+      <div className="mx-auto max-w-4xl space-y-5">
         <div>
           <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
             Stack
