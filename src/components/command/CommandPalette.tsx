@@ -162,7 +162,7 @@ export default function CommandPalette({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 px-4 py-16"
+      className="fixed inset-0 z-50 flex items-start justify-center bg-black/50 px-4 py-16 backdrop-blur-[5px]"
       role="dialog"
       aria-modal="true"
       aria-label="Command palette"
@@ -223,6 +223,17 @@ export default function CommandPalette({
             ))
           )}
         </ul>
+        <div className="flex items-center justify-between border-t border-border/70 px-4 py-2 text-xs text-muted-foreground">
+          <span>Go to page</span>
+          <div className="flex gap-2">
+            <kbd className="rounded bg-muted/70 px-2 py-1 text-[10px] text-foreground">
+              Enter
+            </kbd>
+            <kbd className="rounded bg-muted/70 px-2 py-1 text-[10px] text-foreground">
+              Esc
+            </kbd>
+          </div>
+        </div>
       </div>
     </div>
   );
