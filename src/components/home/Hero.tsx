@@ -36,7 +36,7 @@ export default function ProfileHero() {
   }, []);
 
   return (
-    <section className="py-6 text-foreground">
+    <section className="pt-6 text-foreground">
       {/* OUTER CONTAINER */}
       <div className="border border-border">
         {/* ================= TOP ROW ================= */}

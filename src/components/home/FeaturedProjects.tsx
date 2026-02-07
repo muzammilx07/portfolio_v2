@@ -3,7 +3,7 @@ import { projects } from "@/lib/data/projects";
 
 export default function FeaturedProjects() {
   return (
-    <section className=" border border-border flex flex-row ">
+    <section className=" border border-border flex flex-row mt-6">
       <div className="space-y-3 border-r  border-border">
         <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground px-5 pt-12">
           Skills + Projects

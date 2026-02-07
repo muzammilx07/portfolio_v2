@@ -6,7 +6,7 @@ import SkillsShowcase from "@/components/home/SkillsShowcase";
 
 export default function Page() {
   return (
-    <div className="flex flex-col gap-10 sm:gap-12">
+    <div className="flex flex-col ">
       <Hero />
       <FeaturedProjects />
       <SkillsShowcase />
