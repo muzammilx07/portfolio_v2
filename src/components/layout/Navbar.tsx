@@ -1,5 +1,7 @@
 import Link from "next/link";
 import ThemeToggle from "./ThemeToggle";
+import SearchButton from "@/components/command/SearchButton";
+import SearchModal from "@/components/command/SearchModal";
 import { navigation } from "@/config/navigation";
 import { siteConfig } from "@/config/site";
 
@@ -34,21 +36,13 @@ export default function Navbar() {
               </li>
             ))}
           </ul>
-          <button
-            type="button"
+          <SearchButton
             className={`${navPillBase} group relative hidden gap-3 overflow-hidden before:absolute before:inset-y-0 before:left-0 before:w-10 before:-translate-x-full before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent before:content-[''] motion-safe:before:transition-transform motion-safe:before:duration-500 hover:before:translate-x-[220%] md:flex`}
-            aria-label="Open search"
-          >
-            <span className="motion-safe:transition-transform motion-safe:duration-200 motion-reduce:transition-none group-hover:translate-x-[1px]">
-              Search
-            </span>
-            <span className="rounded border border-border/80 bg-background/60 px-1.5 py-0.5 text-[10px] text-muted-foreground motion-safe:transition-transform motion-safe:duration-200 motion-reduce:transition-none group-hover:-translate-y-[1px] group-hover:text-foreground">
-              Ctrl K
-            </span>
-          </button>
+          />
           <ThemeToggle className={navPillBase} />
         </div>
       </div>
+      <SearchModal />
     </nav>
   );
 }
