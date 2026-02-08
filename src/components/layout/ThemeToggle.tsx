@@ -16,7 +16,7 @@ interface ThemeToggleProps {
 }
 
 const defaultTriggerClassName =
-  "inline-flex h-9 items-center gap-2 rounded-xl border border-border/70 bg-muted/30 px-3 text-xs font-medium text-muted-foreground shadow-sm cursor-pointer motion-safe:transition-all motion-safe:duration-200 motion-reduce:transition-none hover:border-foreground/30 hover:bg-muted/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+  "inline-flex h-9 items-center gap-2 rounded-xl border border-dashed border-border/70 bg-muted/30 px-3 text-xs font-medium text-muted-foreground shadow-sm cursor-pointer motion-safe:transition-all motion-safe:duration-200 motion-reduce:transition-none hover:border-[color:var(--accent-hover-border)] hover:bg-[color:var(--accent-hover-bg)] hover:text-[color:var(--accent-icon-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
 export default function ThemeToggle({ className }: ThemeToggleProps) {
   const { setTheme, resolvedTheme } = useTheme();
@@ -48,8 +48,13 @@ export default function ThemeToggle({ className }: ThemeToggleProps) {
     setOpen(false);
   };
 
+  const effectiveTheme = mounted ? resolvedTheme : "system";
   const CurrentIcon =
-    resolvedTheme === "dark" ? Moon : resolvedTheme === "light" ? Sun : Monitor;
+    effectiveTheme === "dark"
+      ? Moon
+      : effectiveTheme === "light"
+        ? Sun
+        : Monitor;
 
   return (
     <div ref={ref} className="relative">
@@ -69,9 +74,7 @@ export default function ThemeToggle({ className }: ThemeToggleProps) {
         >
           <CurrentIcon size={16} />
         </motion.span>
-        <span className="hidden capitalize sm:inline">
-          {mounted ? resolvedTheme : "theme"}
-        </span>
+        <span className="hidden capitalize sm:inline">{effectiveTheme}</span>
       </button>
 
       <AnimatePresence>

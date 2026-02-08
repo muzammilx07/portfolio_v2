@@ -52,13 +52,13 @@ export default function ProjectPage({ params }: ProjectPageProps) {
           {project.tags.map((tag) => (
             <span
               key={tag}
-              className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
+              className="rounded-full border border-dashed border-border px-3 py-1 text-xs text-muted-foreground"
             >
               {tag}
             </span>
           ))}
         </div>
-        <div className="rounded-2xl border border-border bg-card p-6 text-sm text-muted-foreground">
+        <div className="rounded-2xl border border-dashed border-border bg-card p-6 text-sm text-muted-foreground">
           Case study content coming soon.
         </div>
       </div>

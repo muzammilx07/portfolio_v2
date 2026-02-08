@@ -34,6 +34,14 @@
   --sidebar-border: #d0d0d0;
   --sidebar-ring: #606060;
 
+  /* Accent hover system (light theme) */
+  --accent-hover-border: rgba(59, 130, 246, 0.45);
+  --accent-hover-bg: rgba(59, 130, 246, 0.08);
+  --accent-icon-border: rgba(59, 130, 246, 0.35);
+  --accent-icon-bg: rgba(59, 130, 246, 0.12);
+  --accent-icon-fg: #2563eb;
+  --accent-arrow-fg: rgba(59, 130, 246, 0.85);
+
   --font-sans: Geist Mono, monospace;
   --font-serif: Geist Mono, monospace;
 
@@ -89,6 +97,14 @@
   --sidebar-accent-foreground: #fafafa;
   --sidebar-border: #ffffff;
   --sidebar-ring: #525252;
+
+  /* Accent hover system (dark theme) */
+  --accent-hover-border: rgba(251, 191, 36, 0.45);
+  --accent-hover-bg: rgba(64, 64, 64, 0.35);
+  --accent-icon-border: rgba(251, 191, 36, 0.35);
+  --accent-icon-bg: rgba(245, 158, 11, 0.12);
+  --accent-icon-fg: #fde68a;
+  --accent-arrow-fg: rgba(251, 191, 36, 0.9);
   
  --radius: 0.35rem;
   --shadow-x: 0px;
@@ -160,3 +176,4 @@
   --shadow-xl: var(--shadow-xl);
   --shadow-2xl: var(--shadow-2xl);
 }
+

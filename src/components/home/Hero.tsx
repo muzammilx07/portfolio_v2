@@ -36,14 +36,14 @@ export default function ProfileHero() {
   }, []);
 
   return (
-    <section className="pt-6 text-foreground">
+    <section className="pt-6 text-foreground ">
       {/* OUTER CONTAINER */}
-      <div className="border border-border">
+      <div className="border border-dashed border-border ">
         {/* ================= TOP ROW ================= */}
-        <div className="flex border-b border-border">
+        <div className="flex border-b border-dashed border-border">
           {/* Avatar */}
-          <div className="border-r border-border">
-            <div className="h-32 w-32 overflow-hidden rounded-full border border-border">
+          <div className="border-r border-dashed border-border rounded-br-4xl">
+            <div className="h-32 w-32 m-2 overflow-hidden rounded-full border border-dashed border-border">
               <Image
                 src="/pr.webp"
                 alt="Avatar"
@@ -56,21 +56,21 @@ export default function ProfileHero() {
 
           {/* Name block */}
           <div className="flex w-full flex-col justify-end">
-            <div className="flex items-center gap-2 border-t border-border px-4 py-2">
+            <div className="flex items-center gap-2 border-t border-dashed border-border px-4 py-2">
               <h1 className="text-3xl font-semibold leading-none">
                 Muzammil Shareef
               </h1>
               {/* <BadgeCheck className="h-5 w-5 text-sky-400" /> */}
             </div>
 
-            <p className="border-t border-border px-4 py-1 text-sm text-muted-foreground">
+            <p className="border-t border-dashed border-border px-4 py-1 text-sm text-muted-foreground">
               Full Stack Developer
             </p>
           </div>
         </div>
 
         {/* ================= BOTTOM ROW ================= */}
-        <div className="grid grid-cols-2 divide-x divide-border">
+        <div className="grid grid-cols-2 ">
           {/* LEFT COLUMN */}
           <div className="space-y-0.5 p-6">
             <InfoRow icon={Code2} text="Frontend Developer" />
@@ -80,7 +80,7 @@ export default function ProfileHero() {
           </div>
 
           {/* RIGHT COLUMN */}
-          <div className="flex flex-col justify-end space-y-0.5 p-6">
+          <div className="flex flex-col justify-end space-y-0.5 p-6 rounded-tl-4xl border-l border-dashed border-border">
             <InfoRow icon={Clock} text={istTime} />
             <InfoRow icon={Mail} text="xyz@email" />
             <InfoRow icon={User} text="he/him" />
@@ -96,7 +96,7 @@ export default function ProfileHero() {
 function InfoRow({ icon: Icon, text }: { icon: any; text: string }) {
   return (
     <div className="flex items-center gap-4">
-      <span className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-muted-foreground">
+      <span className="flex h-8 w-8  items-center justify-center rounded-full border border-dashed border-border text-muted-foreground">
         <Icon className="h-4 w-4" />
       </span>
       <span className="text-sm text-foreground">{text}</span>

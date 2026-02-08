@@ -6,12 +6,12 @@ import { navigation } from "@/config/navigation";
 import { siteConfig } from "@/config/site";
 
 const navPillBase =
-  "inline-flex h-9 items-center gap-2 rounded-xl border border-border/70 bg-muted/30 px-3 text-xs font-medium text-muted-foreground shadow-sm cursor-pointer motion-safe:transition-all motion-safe:duration-200 motion-reduce:transition-none hover:border-foreground/30 hover:bg-muted/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+  "inline-flex h-9 items-center gap-2 rounded-xl border border-dashed border-border/70 bg-muted/30 px-3 text-xs font-medium text-muted-foreground shadow-sm cursor-pointer motion-safe:transition-all motion-safe:duration-200 motion-reduce:transition-none hover:border-[color:var(--accent-hover-border)] hover:bg-[color:var(--accent-hover-bg)] hover:text-[color:var(--accent-icon-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
 export default function Navbar() {
   return (
     <nav
-      className="sticky top-0 z-50 w-full border-b  border-border/70 bg-background/80 text-foreground backdrop-blur-xl shadow-sm"
+      className="sticky top-0 z-50 w-full border-b border-dashed border-border/70 bg-background/80 text-foreground backdrop-blur-xl shadow-sm"
       aria-label="Primary"
     >
       <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-3 sm:px-6">
@@ -29,7 +29,7 @@ export default function Navbar() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="relative text-muted-foreground transition-colors hover:text-foreground after:absolute after:-bottom-2 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-foreground/70 after:transition-transform after:duration-300 after:content-[''] hover:after:scale-x-100"
+                  className="relative text-muted-foreground transition-colors hover:text-[color:var(--accent-icon-fg)] after:absolute after:-bottom-2 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-foreground/70 after:transition-transform after:duration-300 after:content-[''] hover:after:scale-x-100 hover:after:bg-[color:var(--accent-icon-fg)]"
                 >
                   {link.label}
                 </Link>

@@ -25,7 +25,7 @@ export default function RecentBlog() {
           {posts.map((post) => (
             <div
               key={post.title}
-              className="rounded-xl border border-border bg-card p-4 transition-colors duration-200 hover:bg-muted/40"
+              className="rounded-xl border border-border bg-card p-4 transition-colors duration-200 hover:border-[color:var(--accent-hover-border)] hover:bg-[color:var(--accent-hover-bg)]"
             >
               <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
                 {post.date}

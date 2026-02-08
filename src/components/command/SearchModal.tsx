@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { JSX, useCallback, useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   Briefcase,
@@ -167,7 +167,7 @@ export default function SearchModal() {
 
   return (
     <CommandDialog open={isOpen} onOpenChange={handleOpenChange}>
-      <div className="border-b border-white/10 bg-zinc-950/90">
+      <div className="border-b border-dashed border-white/10 bg-zinc-950/90">
         <CommandInput placeholder="Type a command or search..." autoFocus />
       </div>
       <CommandList className="max-h-[420px]">
@@ -181,7 +181,7 @@ export default function SearchModal() {
           {portfolioItems.map(renderItem)}
         </CommandGroup>
       </CommandList>
-      <div className="flex items-center justify-between border-t border-white/10 bg-zinc-950/90 px-4 py-2 text-xs text-zinc-400">
+      <div className="flex items-center justify-between border-t border-dashed border-white/10 bg-zinc-950/90 px-4 py-2 text-xs text-zinc-400">
         <span>Go to Page</span>
         <div className="flex gap-2">
           <kbd className="rounded bg-zinc-800 px-2 py-1 text-[10px] text-zinc-100">

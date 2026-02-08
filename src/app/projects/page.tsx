@@ -8,7 +8,7 @@ export default function ProjectsPage() {
           title="Projects"
           description="Case studies and experiments built for speed and clarity."
         />
-        <div className="rounded-2xl border border-border bg-card p-6 text-sm text-muted-foreground">
+        <div className="rounded-2xl border border-dashed border-border bg-card p-6 text-sm text-muted-foreground">
           Project archive coming soon.
         </div>
       </div>
