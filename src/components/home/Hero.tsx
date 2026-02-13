@@ -13,6 +13,8 @@ import {
   User,
   Users,
 } from "lucide-react";
+import { WordRotate } from "../animations/WordRotate";
+import LiveClock from "./LiveClock";
 
 export default function ProfileHero() {
   const [istTime, setIstTime] = useState<string>("");
@@ -63,9 +65,12 @@ export default function ProfileHero() {
               {/* <BadgeCheck className="h-5 w-5 text-sky-400" /> */}
             </div>
 
-            <p className="border-t border-dashed border-border px-4 py-1 text-sm text-muted-foreground">
-              Full Stack Developer
-            </p>
+            <div className="w-full max-w-2xl text-2xl md:text-3xl font-semibold text-neutral-300 border-border border-t border-dashed">
+              <WordRotate
+                words={["Full Stack Developer", "Product Engineer"]}
+                className=" r px-4 py-1 text-sm text-muted-foreground"
+              />
+            </div>
           </div>
         </div>
 
@@ -77,13 +82,12 @@ export default function ProfileHero() {
             <InfoRow icon={MapPin} text="Hyderabad, India" />
             <InfoRow icon={Phone} text="+91 98765 43210" />
             <InfoRow icon={User} text="new.com" />
+            <InfoRow icon={Mail} text="xyz@email" />
           </div>
 
           {/* RIGHT COLUMN */}
           <div className="flex flex-col justify-end space-y-0.5 p-6 rounded-tl-4xl border-l border-dashed border-border">
-            <InfoRow icon={Clock} text={istTime} />
-            <InfoRow icon={Mail} text="xyz@email" />
-            <InfoRow icon={User} text="he/him" />
+            <LiveClock />
           </div>
         </div>
       </div>

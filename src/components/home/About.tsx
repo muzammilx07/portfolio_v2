@@ -75,11 +75,20 @@ export default function About() {
             </h3>
             <Sparkles className="h-5 w-5 text-muted-foreground" />
           </div>
-          <p className="text-sm text-muted-foreground sm:text-base">
-            I am a full stack web developer and open source contributor. I focus
-            on building MVPs and performance-first products with clean,
-            pragmatic UX.
-          </p>
+          <ul className="text-xs text-muted-foreground sm:text-sm list-disc pl-4 space-y-2">
+            <li>
+              Web Developer with 1+ years of experience, known for clean,
+              pragmatic UI and thoughtful UX details.
+            </li>
+            <li>
+              Skilled in React, Next.js, TypeScript, and modern front-end
+              technologies, building high-quality, user-centric web experiences.
+            </li>
+            <li>
+              Passionate about exploring new technologies and turning ideas into
+              thoughtfully crafted personal projects.
+            </li>
+          </ul>
 
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
