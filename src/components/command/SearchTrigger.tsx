@@ -1,7 +1,7 @@
 "use client";
 
 import { useCommandStore } from "@/lib/store/commandStore";
-import PillButton from "@/components/ui/PillButton";
+import PillButton from "@/components/shared/PillLink";
 
 interface Props {
   className?: string;
