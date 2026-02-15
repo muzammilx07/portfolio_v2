@@ -1,42 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import type { ComponentType, SVGProps } from "react";
-import {
-  BadgeCheck,
-  Clock,
-  Code2,
-  Mail,
-  MapPin,
-  Phone,
-  User,
-  Users,
-} from "lucide-react";
+import { Code2, Mail, MapPin, Phone, User } from "lucide-react";
 import { WordRotate } from "../animations/WordRotate";
 import LiveClock from "./LiveClock";
+import HoverUnderline from "@/components/shared/HoverUnderline";
 
 export default function ProfileHero() {
-  const [istTime, setIstTime] = useState<string>("");
-
-  useEffect(() => {
-    const formatter = new Intl.DateTimeFormat("en-IN", {
-      timeZone: "Asia/Kolkata",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    });
-
-    const updateTime = () => {
-      setIstTime(`${formatter.format(new Date())} // IST`);
-    };
-
-    updateTime();
-    const interval = window.setInterval(updateTime, 60_000);
-
-    return () => window.clearInterval(interval);
-  }, []);
-
   return (
     <section className="pt-6 text-foreground ">
       {/* OUTER CONTAINER */}
@@ -45,7 +16,7 @@ export default function ProfileHero() {
         <div className="flex border-b border-dashed border-border">
           {/* Avatar */}
           <div className="border-r border-dashed border-border rounded-br-4xl">
-            <div className="h-32 w-32 m-2 overflow-hidden rounded-full border border-dashed border-border">
+            <div className="h-32 w-32 m-2 overflow-hidden rounded-full ">
               <Image
                 src="/pr.webp"
                 alt="Avatar"
@@ -97,13 +68,21 @@ export default function ProfileHero() {
 
 /* ================= INFO ROW ================= */
 
-function InfoRow({ icon: Icon, text }: { icon: any; text: string }) {
+function InfoRow({
+  icon: Icon,
+  text,
+}: {
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
+  text: string;
+}) {
   return (
     <div className="flex items-center gap-4">
       <span className="flex h-8 w-8  items-center justify-center rounded-full border border-dashed border-border text-muted-foreground">
-        <Icon className="h-4 w-4" />
+        <Icon className="h-4 w-4" aria-hidden="true" />
       </span>
-      <span className="text-sm text-foreground">{text}</span>
+      <span className="text-sm text-foreground">
+        <HoverUnderline className="cursor-default">{text}</HoverUnderline>
+      </span>
     </div>
   );
 }

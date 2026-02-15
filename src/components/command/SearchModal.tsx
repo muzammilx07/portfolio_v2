@@ -168,7 +168,7 @@ export default function SearchModal() {
   return (
     <CommandDialog open={isOpen} onOpenChange={handleOpenChange}>
       <div className="border-b border-dashed border-white/10 bg-zinc-950/90">
-        <CommandInput placeholder="Type a command or search..." autoFocus />
+        <CommandInput placeholder="Type a command or search…" />
       </div>
       <CommandList className="max-h-[420px]">
         <CommandEmpty>No results found.</CommandEmpty>

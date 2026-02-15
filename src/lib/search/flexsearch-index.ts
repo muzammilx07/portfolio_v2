@@ -1,4 +1,11 @@
 import FlexSearch from "flexsearch";
+import type {
+  Document,
+  DocumentData,
+  DocumentDescriptor,
+  EnrichedResults,
+  EnrichedDocumentSearchResults,
+} from "flexsearch";
 import { getAllMdx } from "@/lib/utils/mdx";
 
 export type SearchType = "blog" | "projects";
@@ -13,6 +20,8 @@ export interface SearchEntry {
   content: string;
 }
 
+type SearchDocument = SearchEntry & DocumentData;
+
 export interface SearchResult {
   id: string;
   type: SearchType;
@@ -24,24 +33,23 @@ export interface SearchResult {
 
 const normalize = (value: string) => value.trim();
 
-export function createSearchIndex(entries: SearchEntry[]) {
-  const index = new FlexSearch.Document<SearchEntry, true>({
+export function createSearchIndex(
+  entries: SearchEntry[],
+): Document<SearchDocument> {
+  const document = {
+    id: "id",
+    index: ["title", "description", "tags", "content"],
+    store: ["id", "type", "slug", "title", "description", "tags"],
+  };
+
+  const index = new FlexSearch.Document<SearchDocument>({
     tokenize: "forward",
     cache: 100,
-    document: {
-      id: "id",
-      index: [
-        { field: "title", weight: 3 },
-        { field: "description", weight: 2 },
-        { field: "tags", weight: 2 },
-        { field: "content", weight: 1 },
-      ],
-      store: ["id", "type", "slug", "title", "description", "tags"],
-    },
+    document: document as unknown as DocumentDescriptor<SearchDocument>,
   });
 
   entries.forEach((entry) => {
-    index.add(entry);
+    index.add(entry as SearchDocument);
   });
 
   return index;
@@ -83,7 +91,7 @@ export async function buildSearchIndex() {
 }
 
 export function searchIndex(
-  index: FlexSearch.Document<SearchEntry, true>,
+  index: Document<SearchDocument>,
   query: string,
   limit = 8,
 ): SearchResult[] {
@@ -91,15 +99,31 @@ export function searchIndex(
     return [];
   }
 
-  const results = index.search(query, { limit, enrich: true });
-  const flat = results.flatMap((result) => result.result);
+  const results: EnrichedDocumentSearchResults<DocumentData> = index.search(
+    query,
+    {
+      limit,
+      enrich: true,
+    },
+  ) as EnrichedDocumentSearchResults<DocumentData>;
+  const flat: EnrichedResults<DocumentData> = results.flatMap(
+    (result) => result.result,
+  );
 
-  return flat.map((doc) => ({
-    id: doc.id,
-    type: doc.type,
-    slug: doc.slug,
-    title: doc.title,
-    description: doc.description,
-    tags: doc.tags,
-  }));
+  const toSearchResult = (doc: DocumentData): SearchResult => {
+    const entry = doc as Omit<SearchEntry, "content">;
+    return {
+      id: entry.id,
+      type: entry.type,
+      slug: entry.slug,
+      title: entry.title,
+      description: entry.description,
+      tags: entry.tags,
+    };
+  };
+
+  return flat
+    .map((item) => item.doc)
+    .filter((doc): doc is DocumentData => Boolean(doc))
+    .map(toSearchResult);
 }

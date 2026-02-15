@@ -1,0 +1,163 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "npm: lint",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"lint"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "npm: lint (rerun)",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"lint"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "npm: lint (resume)",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"lint"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "tsc: typecheck",
+			"type": "shell",
+			"command": "npx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "tsc: typecheck (resume)",
+			"type": "shell",
+			"command": "npx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "tsc: typecheck (resume 2)",
+			"type": "shell",
+			"command": "npx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "tsc: typecheck (resume 3)",
+			"type": "shell",
+			"command": "npx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "tsc: typecheck (resume 4)",
+			"type": "shell",
+			"command": "npx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "tsc: typecheck (resume 5)",
+			"type": "shell",
+			"command": "npx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "tsc: typecheck (resume 6)",
+			"type": "shell",
+			"command": "npx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "tsc: typecheck (resume 7)",
+			"type": "shell",
+			"command": "npx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "tsc: typecheck (resume 8)",
+			"type": "shell",
+			"command": "npx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "tsc: typecheck (resume 9)",
+			"type": "shell",
+			"command": "npx",
+			"args": [
+				"tsc",
+				"--noEmit",
+				"--pretty",
+				"false"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		}
+	]
+}

@@ -1,7 +1,6 @@
 import { compileMDX } from "next-mdx-remote/rsc";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { format } from "date-fns";
 import { getContentSlugs, getMdxBySlug } from "@/lib/utils/mdx";
 
 interface BlogPageProps {
@@ -43,7 +42,11 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
   });
 
   const formattedDate = post.frontmatter.date
-    ? format(new Date(post.frontmatter.date), "MMM dd, yyyy")
+    ? new Intl.DateTimeFormat(undefined, {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      }).format(new Date(post.frontmatter.date))
     : "";
 
   return (
@@ -58,9 +61,7 @@ export default async function BlogPostPage({ params }: BlogPageProps) {
             {post.frontmatter.title}
           </h1>
         </header>
-        <div className="prose prose-neutral max-w-none">
-          {content}
-        </div>
+        <div className="prose prose-neutral max-w-none">{content}</div>
       </div>
     </article>
   );

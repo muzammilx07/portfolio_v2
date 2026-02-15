@@ -16,7 +16,7 @@ interface ThemeToggleProps {
 }
 
 const defaultTriggerClassName =
-  "inline-flex h-9 items-center gap-2 rounded-xl border border-dashed border-border/70 bg-muted/30 px-3 text-xs font-medium text-muted-foreground shadow-sm cursor-pointer motion-safe:transition-all motion-safe:duration-200 motion-reduce:transition-none hover:border-[color:var(--accent-hover-border)] hover:bg-[color:var(--accent-hover-bg)] hover:text-[color:var(--accent-icon-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+  "inline-flex h-9 items-center gap-2 rounded-xl border border-dashed border-border/70 bg-muted/30 px-3 text-xs font-medium text-muted-foreground shadow-sm cursor-pointer motion-safe:transition-colors motion-safe:transition-transform motion-safe:duration-200 motion-reduce:transition-none hover:border-[color:var(--accent-hover-border)] hover:bg-[color:var(--accent-hover-bg)] hover:text-[color:var(--accent-icon-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
 export default function ThemeToggle({ className }: ThemeToggleProps) {
   const { setTheme, resolvedTheme } = useTheme();
@@ -30,6 +30,7 @@ export default function ThemeToggle({ className }: ThemeToggleProps) {
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (!ref.current) return;
+      if (!(e.target instanceof Node)) return;
       if (!ref.current.contains(e.target)) {
         setOpen(false);
       }
@@ -40,6 +41,7 @@ export default function ThemeToggle({ className }: ThemeToggleProps) {
 
   // avoid hydration mismatch with resolvedTheme
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -61,6 +63,7 @@ export default function ThemeToggle({ className }: ThemeToggleProps) {
       <button
         type="button"
         aria-haspopup="menu"
+        aria-label="Toggle theme"
         aria-expanded={open}
         aria-controls={menuId}
         onClick={() => setOpen((prev) => !prev)}

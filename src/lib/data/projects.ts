@@ -24,4 +24,10 @@ export const projects: ProjectSummary[] = [
     summary: "Real-time analytics with accessible motion design.",
     tags: ["GSAP", "Zustand", "Charts"],
   },
+  {
+    slug: "studio-portfolio",
+    title: "Studio Portfolio",
+    summary: "Minimal portfolio site with CMS-driven case studies.",
+    tags: ["Next.js", "MDX", "Tailwind"],
+  },
 ];

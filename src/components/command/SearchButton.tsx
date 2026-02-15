@@ -22,6 +22,7 @@ export default function SearchButton({ className }: SearchButtonProps) {
       <span className="rounded border border-border/80 bg-background/60 px-1.5 py-0.5 text-[10px] text-muted-foreground motion-safe:transition-transform motion-safe:duration-200 motion-reduce:transition-none group-hover:-translate-y-[1px] group-hover:text-foreground">
         Ctrl K
       </span>
+      <span className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-foreground/10 to-transparent bg-[length:200%_100%] bg-[position:0%_0%] transition-[background-position] duration-500 group-hover:bg-[position:100%_0%]" />
     </button>
   );
 }

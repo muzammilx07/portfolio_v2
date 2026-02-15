@@ -12,7 +12,7 @@ export default async function BlogPage() {
             Blog
           </p>
           <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Notes and updates
+            Notes and Updates
           </h1>
         </header>
         {posts.length === 0 ? (
@@ -25,7 +25,7 @@ export default async function BlogPage() {
               <Link
                 key={post.slug}
                 href={`/blog/${post.slug}`}
-                className="block rounded-2xl border border-border bg-card p-5 transition hover:-translate-y-1 hover:shadow-md"
+                className="block rounded-2xl border border-border bg-card p-5 transition-transform transition-shadow hover:-translate-y-1 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <h2 className="text-lg font-semibold text-foreground">
                   {post.frontmatter.title}

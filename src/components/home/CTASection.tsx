@@ -8,7 +8,7 @@ export default function CTASection() {
           Collaboration
         </p>
         <h2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">
-          Lets build something that performs
+          Let's Build Something That Performs
         </h2>
         <p className="mx-auto mt-3 max-w-2xl text-sm text-muted-foreground sm:text-base">
           Ready for a launch-ready product with motion, clarity, and speed.

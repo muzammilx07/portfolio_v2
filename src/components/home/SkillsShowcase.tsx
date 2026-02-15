@@ -20,7 +20,7 @@ export default function SkillsShowcase() {
             Stack
           </p>
           <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-            Focused, performance-first tooling
+            Focused, Performance-First Tooling
           </h2>
         </div>
         <div className="flex flex-wrap gap-2">

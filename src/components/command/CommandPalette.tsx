@@ -26,7 +26,7 @@ interface CommandPaletteProps {
 
 export default function CommandPalette({
   commands,
-  placeholder = "Type a command or search...",
+  placeholder = "Type a command or search…",
 }: CommandPaletteProps) {
   const {
     isOpen,
@@ -141,14 +141,7 @@ export default function CommandPalette({
         handleClose();
       }
     },
-    [
-      filtered,
-      handleClose,
-      isOpen,
-      open,
-      selectedIndex,
-      setSelectedIndex,
-    ],
+    [filtered, handleClose, isOpen, open, selectedIndex, setSelectedIndex],
   );
 
   useEffect(() => {
@@ -178,7 +171,7 @@ export default function CommandPalette({
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder={placeholder}
-            className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
+            className="w-full rounded-md bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             aria-label="Search commands"
           />
         </div>
@@ -197,7 +190,7 @@ export default function CommandPalette({
                     handleClose();
                   }}
                   className={cn(
-                    "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition",
+                    "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                     index === selectedIndex
                       ? "bg-muted text-foreground"
                       : "text-muted-foreground hover:bg-muted/40",

@@ -4,9 +4,8 @@ import SearchButton from "@/components/command/SearchButton";
 import SearchModal from "@/components/command/SearchModal";
 import { navigation } from "@/config/navigation";
 import { siteConfig } from "@/config/site";
-
-const navPillBase =
-  "inline-flex h-9 items-center gap-2 rounded-xl border border-dashed border-border/70 bg-muted/30 px-3 text-xs font-medium text-muted-foreground shadow-sm cursor-pointer motion-safe:transition-all motion-safe:duration-200 motion-reduce:transition-none hover:border-[color:var(--accent-hover-border)] hover:bg-[color:var(--accent-hover-bg)] hover:text-[color:var(--accent-icon-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+import HoverUnderline from "@/components/shared/HoverUnderline";
+import PillLink, { pillLinkBaseClass } from "@/components/shared/PillLink";
 
 export default function Navbar() {
   return (
@@ -22,24 +21,29 @@ export default function Navbar() {
         >
           <span>{siteConfig.name}</span>
         </Link>
-
         <div className="flex items-center gap-3 sm:gap-5">
           <ul className="hidden items-center gap-4 text-sm font-medium md:flex">
             {navigation.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="relative text-muted-foreground transition-colors hover:text-[color:var(--accent-icon-fg)] after:absolute after:-bottom-2 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-foreground/70 after:transition-transform after:duration-300 after:content-[''] hover:after:scale-x-100 hover:after:bg-[color:var(--accent-icon-fg)]"
+                  className="rounded-sm text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
-                  {link.label}
+                  <HoverUnderline
+                    className="text-muted-foreground transition-colors hover:text-[color:var(--accent-icon-fg)]"
+                    underlineClassName="-bottom-2 bg-foreground/70 group-hover:bg-[color:var(--accent-icon-fg)]"
+                  >
+                    {link.label}
+                  </HoverUnderline>
                 </Link>
               </li>
             ))}
           </ul>
           <SearchButton
-            className={`${navPillBase} group relative hidden gap-3 overflow-hidden before:absolute before:inset-y-0 before:left-0 before:w-10 before:-translate-x-full before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent before:content-[''] motion-safe:before:transition-transform motion-safe:before:duration-500 hover:before:translate-x-[220%] md:flex`}
+            className={`${pillLinkBaseClass} hidden gap-3 md:flex`}
           />
-          <ThemeToggle className={navPillBase} />
+         
+          <ThemeToggle className={pillLinkBaseClass} />
         </div>
       </div>
       <SearchModal />
