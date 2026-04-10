@@ -2,12 +2,31 @@
 
 import Image from "next/image";
 import type { ComponentType, SVGProps } from "react";
+import { useState, useEffect } from "react";
 import { Code2, Mail, MapPin, Phone, User } from "lucide-react";
 import { WordRotate } from "../animations/WordRotate";
-import LiveClock from "./LiveClock";
+import OmniLED from "../display/MatrixDisplay";
 import HoverUnderline from "@/components/shared/HoverUnderline";
 
 export default function ProfileHero() {
+  const [time, setTime] = useState("");
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const formattedTime = now.toLocaleTimeString("en-GB", {
+        hour12: false,
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      setTime(formattedTime);
+    };
+
+    updateTime();
+    const interval = window.setInterval(updateTime, 1000);
+
+    return () => window.clearInterval(interval);
+  }, []);
   return (
     <section className="pt-6 text-foreground ">
       {/* OUTER CONTAINER */}
@@ -57,8 +76,8 @@ export default function ProfileHero() {
           </div>
 
           {/* RIGHT COLUMN */}
-          <div className="flex flex-col justify-end space-y-0.5 p-6 rounded-tl-4xl border-l border-dashed border-border">
-            <LiveClock />
+          <div className="flex flex-col w-full p-3 rounded-tl-4xl border-l border-dashed border-border min-h-56">
+            <OmniLED showStatus={true} showControls={true} time={time} />
           </div>
         </div>
       </div>
