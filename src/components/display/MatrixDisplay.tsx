@@ -6,7 +6,7 @@ const COLS = 32,
   DOT = 10,
   GAP = 6,
   CELL = DOT + GAP;
-const MODES = ["WAVE", "LISTEN", "TIME", "NAME"];
+const MODES = ["LISTEN", "TIME", "WAVE", "TEXT"];
 
 const FONT = {
   "0": ["01110", "10001", "10001", "10001", "10001", "10001", "01110"],
@@ -29,10 +29,10 @@ const FONT = {
   I: ["01110", "00100", "00100", "00100", "00100", "00100", "01110"],
 };
 
-function getTextDots(text: string) {
+function getTextDots(text: string, offset: number = 0) {
   const charW = 6;
   const totalW = text.length * charW - 1;
-  const startCol = Math.round((COLS - totalW) / 2);
+  const startCol = Math.round((COLS - totalW) / 2) + offset;
   const startRow = Math.round((ROWS - 7) / 2);
   const dots = new Set<string>();
   for (let ci = 0; ci < text.length; ci++) {
@@ -71,10 +71,49 @@ export default function OmniLED({
   const coordRef = useRef({ col: 0, row: 0 });
   const mouse = useRef({ x: -9999, y: -9999 });
   const timeRef = useRef(time);
+  const isInViewRef = useRef(false);
+  const modeRotateRef = useRef<NodeJS.Timeout | null>(null);
+  const modeStartTimeRef = useRef(Date.now());
 
   useEffect(() => {
     timeRef.current = time;
   }, [time]);
+
+  // Intersection observer for auto-mode rotation when in view
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isInViewRef.current = entry.isIntersecting;
+        if (entry.isIntersecting) {
+          modeStartTimeRef.current = Date.now();
+          // Check mode duration every 500ms
+          modeRotateRef.current = setInterval(() => {
+            const currentMode = modeRef.current;
+            const modeDuration =
+              currentMode === "TEXT" ? 8000 : 3000; // 8s for TEXT, 3s for others
+            const elapsed = Date.now() - modeStartTimeRef.current;
+            if (elapsed >= modeDuration) {
+              modeStartTimeRef.current = Date.now();
+              changeMode(1);
+            }
+          }, 500);
+        } else {
+          // Stop auto-rotate when out of view
+          if (modeRotateRef.current) clearInterval(modeRotateRef.current);
+        }
+      },
+      { threshold: 0.1 },
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+      if (modeRotateRef.current) clearInterval(modeRotateRef.current);
+    };
+  }, []);
 
   const sa = useRef(new Float32Array(COLS * ROWS));
   const dxa = useRef(new Float32Array(COLS * ROWS));
@@ -153,15 +192,9 @@ export default function OmniLED({
     const vx = vxa.current;
     const vy = vya.current;
 
-    const nameDots = getTextDots("_MS");
     let raf: number;
 
-    function drawDot(
-      x: number,
-      y: number,
-      val: number,
-      isDark: boolean,
-    ) {
+    function drawDot(x: number, y: number, val: number, isDark: boolean) {
       const r = DOT / 2;
 
       // NON-ACTIVE — tiny dim speck only
@@ -237,21 +270,20 @@ export default function OmniLED({
       const bgValue = getComputedStyle(root)
         .getPropertyValue("--background")
         .trim();
-      
+
       // Handle both hex (#f0f0f0) and RGB (rgb(240,240,240)) formats
       let bgColor = bgValue;
       if (bgValue.startsWith("rgb")) {
         // Convert rgb(r,g,b) to hex
         const match = bgValue.match(/\d+/g);
         if (match && match.length >= 3) {
-          const hex = (x: string) =>
-            parseInt(x).toString(16).padStart(2, "0");
+          const hex = (x: string) => parseInt(x).toString(16).padStart(2, "0");
           bgColor = `#${hex(match[0])}${hex(match[1])}${hex(match[2])}`;
         }
       } else if (!bgValue.startsWith("#")) {
         bgColor = `#${bgValue}`;
       }
-      
+
       const isDark = bgColor.toLowerCase() === "#0a0a0a";
 
       const t = performance.now() / 1000;
@@ -297,43 +329,18 @@ export default function OmniLED({
             target = timeDots?.has(`${col},${row}`) ? 1 : 0;
           }
 
-          if (m === "NAME") {
-            const isNameDot = nameDots.has(`${col},${row}`);
-            target = isNameDot ? 1 : 0;
-
-            if (isNameDot) {
-              // Magnetic physics — dots spring toward cursor
-              const curX = baseX + dx[i];
-              const curY = baseY + dy[i];
-              const mx = mouse.current.x;
-              const my = mouse.current.y;
-              const dist = Math.hypot(mx - curX, my - curY);
-              const RANGE = 90;
-
-              if (dist < RANGE && dist > 0.5) {
-                const force = (1 - dist / RANGE) * 0.52 * CELL;
-                const ang = Math.atan2(my - curY, mx - curX);
-                vx[i] += Math.cos(ang) * force;
-                vy[i] += Math.sin(ang) * force;
-              }
-
-              // Spring restoring force
-              vx[i] += -dx[i] * 0.09;
-              vy[i] += -dy[i] * 0.09;
-              // Damping
-              vx[i] *= 0.76;
-              vy[i] *= 0.76;
-
-              dx[i] += vx[i];
-              dy[i] += vy[i];
-            } else {
-              dx[i] = 0;
-              dy[i] = 0;
-              vx[i] = 0;
-              vy[i] = 0;
-            }
+          if (m === "TEXT") {
+            // LED scrolling text: right to left animation
+            const scrollDuration = 8; // Complete scroll in 8 seconds
+            const scrollTime = t % scrollDuration;
+            const charW = 6;
+            const textWidth = "OPEN FOR WORK ".length * charW;
+            // Offset moves from COLS (right) to -textWidth (left)
+            const scrollOffset = Math.round(COLS - (scrollTime / scrollDuration) * (COLS + textWidth));
+            const scrollingDots = getTextDots("OPEN FOR WORK ", scrollOffset);
+            target = scrollingDots.has(`${col},${row}`) ? 1 : 0;
           } else {
-            // Decay displacement when leaving NAME mode
+            // Decay displacement when leaving TEXT mode
             dx[i] *= 0.82;
             dy[i] *= 0.82;
             vx[i] *= 0.82;
@@ -398,6 +405,7 @@ export default function OmniLED({
           width: W,
           height: H,
           imageRendering: "pixelated",
+          maxHeight: "12rem",
         }}
       />
 
