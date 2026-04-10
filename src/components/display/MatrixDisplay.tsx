@@ -21,12 +21,18 @@ const FONT = {
   "9": ["01110", "10001", "10001", "01111", "00001", "00001", "01110"],
   ":": ["00000", "00100", "00100", "00000", "00100", "00100", "00000"],
   " ": ["00000", "00000", "00000", "00000", "00000", "00000", "00000"],
-  "_": ["00000", "00000", "00000", "00000", "00000", "00000", "11111"],
+  _: ["00000", "00000", "00000", "00000", "00000", "00000", "11111"],
   O: ["01110", "10001", "10001", "10001", "10001", "10001", "01110"],
   M: ["10001", "11011", "10101", "10001", "10001", "10001", "10001"],
   N: ["10001", "11001", "10101", "10011", "10001", "10001", "10001"],
   S: ["01110", "10000", "10000", "01110", "00001", "00001", "11110"],
   I: ["01110", "00100", "00100", "00100", "00100", "00100", "01110"],
+  P: ["11110", "10001", "10001", "11110", "10000", "10000", "10000"],
+  E: ["11111", "10000", "10000", "11100", "10000", "10000", "11111"],
+  F: ["11111", "10000", "10000", "11100", "10000", "10000", "10000"],
+  R: ["11110", "10001", "10001", "11110", "10100", "10010", "10001"],
+  W: ["10001", "10001", "10001", "10101", "10101", "11011", "10001"],
+  K: ["10001", "10010", "10100", "11000", "10100", "10010", "10001"],
 };
 
 function getTextDots(text: string, offset: number = 0) {
@@ -63,7 +69,7 @@ export default function OmniLED({
 }: MatrixDisplayProps = {}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const modeRef = useRef("WAVE");
+  const modeRef = useRef(MODES[0]);
   const modeIdxRef = useRef(0);
   const [modeIdx, setModeIdx] = useState(0);
   const [coord, setCoord] = useState("00,00");
@@ -89,8 +95,7 @@ export default function OmniLED({
           // Check mode duration every 500ms
           modeRotateRef.current = setInterval(() => {
             const currentMode = modeRef.current;
-            const modeDuration =
-              currentMode === "TEXT" ? 8000 : 3000; // 8s for TEXT, 3s for others
+            const modeDuration = currentMode === "TEXT" ? 12000 : 3000; // 12s for TEXT (full scroll animation), 3s for others
             const elapsed = Date.now() - modeStartTimeRef.current;
             if (elapsed >= modeDuration) {
               modeStartTimeRef.current = Date.now();
@@ -143,10 +148,8 @@ export default function OmniLED({
       setScale(Math.max(newScale, 0.3));
     };
     calculateScale();
-    const timer = setTimeout(calculateScale, 100);
     window.addEventListener("resize", calculateScale);
     return () => {
-      clearTimeout(timer);
       window.removeEventListener("resize", calculateScale);
     };
   }, [showStatus, showControls]);
@@ -330,15 +333,21 @@ export default function OmniLED({
           }
 
           if (m === "TEXT") {
-            // LED scrolling text: right to left animation
-            const scrollDuration = 8; // Complete scroll in 8 seconds
+            // LED scrolling text: right to left animation - show complete text
+            const scrollDuration = 12;
             const scrollTime = t % scrollDuration;
+            const text = "OPEN FOR WORK ";
             const charW = 6;
-            const textWidth = "OPEN FOR WORK ".length * charW;
-            // Offset moves from COLS (right) to -textWidth (left)
-            const scrollOffset = Math.round(COLS - (scrollTime / scrollDuration) * (COLS + textWidth));
-            const scrollingDots = getTextDots("OPEN FOR WORK ", scrollOffset);
-            target = scrollingDots.has(`${col},${row}`) ? 1 : 0;
+            const totalW = text.length * charW - 1;
+            // startCol travels from COLS (right edge) to -totalW (left edge)
+            // getTextDots internally adds centeredStart, so we subtract it back out
+            const centeredStart = Math.round((COLS - totalW) / 2);
+            const startCol = Math.round(
+              COLS - (scrollTime / scrollDuration) * (COLS + totalW),
+            );
+            const scrollOffset = startCol - centeredStart;
+            const scrollingDots = getTextDots(text, scrollOffset);
+            target = scrollingDots.has(`${col},${row}`) ? 2 : 0; // 2 = strong (always bright for text)
           } else {
             // Decay displacement when leaving TEXT mode
             dx[i] *= 0.82;
