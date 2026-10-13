@@ -1,133 +1,78 @@
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap");
 @import "tailwindcss";
 
 html {
-  color-scheme: light;
+  color-scheme: dark light;
+  scroll-behavior: smooth;
 }
 
 :root {
-  --background: #f0f0f0;
-  --foreground: #333333;
-  --card: #f5f5f5;
-  --card-foreground: #333333;
-  --popover: #f5f5f5;
-  --popover-foreground: #333333;
-  --primary: #606060;
-  --primary-foreground: #ffffff;
-  --secondary: #e0e0e0;
-  --secondary-foreground: #333333;
-  --muted: #d9d9d9;
-  --muted-foreground: #666666;
-  --accent: #c0c0c0;
-  --accent-foreground: #333333;
-  --destructive: #cc3333;
+  --background: #fafaf8;
+  --foreground: #141416;
+  --card: #f3f2ed;
+  --card-foreground: #141416;
+  --popover: #ffffff;
+  --popover-foreground: #141416;
+  --primary: #141416;
+  --primary-foreground: #fafaf8;
+  --secondary: #ecebe4;
+  --secondary-foreground: #141416;
+  --muted: #efeee8;
+  --muted-foreground: #63625d;
+  --accent: #e6e4dc;
+  --accent-foreground: #141416;
+  --destructive: #e11d48;
   --destructive-foreground: #ffffff;
-  --border: #d0d0d0;
-  --input: #e0e0e0;
-  --ring: #606060;
-  --chart-1: #606060;
-  --chart-2: #476666;
-  --chart-3: #909090;
-  --chart-4: #a8a8a8;
-  --chart-5: #c0c0c0;
-  --sidebar: #eaeaea;
-  --sidebar-foreground: #333333;
-  --sidebar-primary: #606060;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #c0c0c0;
-  --sidebar-accent-foreground: #333333;
-  --sidebar-border: #d0d0d0;
-  --sidebar-ring: #606060;
+  --border: #e4e2d8;
+  --divider: rgba(20, 20, 22, 0.08);
+  --input: #e4e2d8;
+  --ring: #63625d;
 
-  /* Accent hover system (light theme) */
-  --accent-hover-border: rgba(59, 130, 246, 0.45);
-  --accent-hover-bg: rgba(59, 130, 246, 0.08);
-  --accent-icon-border: rgba(59, 130, 246, 0.35);
-  --accent-icon-bg: rgba(59, 130, 246, 0.12);
-  --accent-icon-fg: #2563eb;
-  --accent-arrow-fg: rgba(59, 130, 246, 0.85);
+  --accent-hover-border: rgba(20, 20, 22, 0.18);
+  --accent-hover-bg: rgba(20, 20, 22, 0.03);
+  --accent-icon-border: rgba(20, 20, 22, 0.12);
+  --accent-icon-bg: rgba(20, 20, 22, 0.04);
+  --accent-icon-fg: #141416;
+  --accent-arrow-fg: rgba(20, 20, 22, 0.8);
 
-  --font-sans: Geist Mono, monospace;
-  --font-serif: Geist Mono, monospace;
+  --font-sans: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-serif: "Newsreader", "Instrument Serif", Georgia, serif;
 
-  --radius: 0.35rem;
-  --shadow-x: 0px;
-  --shadow-y: 2px;
-  --shadow-blur: 0px;
-  --shadow-spread: 0px;
-  --shadow-opacity: 0.15;
-  --shadow-color: hsl(0 0% 20% / 0.1);
-  --shadow-2xs: 0px 2px 0px 0px hsl(0 0% 20% / 0.07);
-  --shadow-xs: 0px 2px 0px 0px hsl(0 0% 20% / 0.07);
-  --shadow-sm: 0px 2px 0px 0px hsl(0 0% 20% / 0.15), 0px 1px 2px -1px hsl(0 0% 20% / 0.15);
-  --shadow: 0px 2px 0px 0px hsl(0 0% 20% / 0.15), 0px 1px 2px -1px hsl(0 0% 20% / 0.15);
-  --shadow-md: 0px 2px 0px 0px hsl(0 0% 20% / 0.15), 0px 2px 4px -1px hsl(0 0% 20% / 0.15);
-  --shadow-lg: 0px 2px 0px 0px hsl(0 0% 20% / 0.15), 0px 4px 6px -1px hsl(0 0% 20% / 0.15);
-  --shadow-xl: 0px 2px 0px 0px hsl(0 0% 20% / 0.15), 0px 8px 10px -1px hsl(0 0% 20% / 0.15);
-  --shadow-2xl: 0px 2px 0px 0px hsl(0 0% 20% / 0.38);
-  --tracking-normal: 0em;
-  --spacing: 0.25rem;
+  --radius: 0.5rem;
 }
 
 .dark {
   color-scheme: dark;
-  --background: #0a0a0a;
-  --foreground: #fafafa;
-  --card: #191919;
-  --card-foreground: #fafafa;
-  --popover: #262626;
-  --popover-foreground: #fafafa;
-  --primary: #737373;
-  --primary-foreground: #fafafa;
-  --secondary: #262626;
-  --secondary-foreground: #fafafa;
-  --muted: #262626;
-  --muted-foreground: #a1a1a1;
-  --accent: #404040;
-  --accent-foreground: #fafafa;
-  --destructive: #ff6467;
-  --destructive-foreground: #262626;
-  --border: #383838;
-  --input: #525252;
-  --ring: #737373;
-  --chart-1: #737373;
-  --chart-2: #737373;
-  --chart-3: #737373;
-  --chart-4: #737373;
-  --chart-5: #737373;
-  --sidebar: #171717;
-  --sidebar-foreground: #fafafa;
-  --sidebar-primary: #fafafa;
-  --sidebar-primary-foreground: #171717;
-  --sidebar-accent: #262626;
-  --sidebar-accent-foreground: #fafafa;
-  --sidebar-border: #ffffff;
-  --sidebar-ring: #525252;
+  --background: #09090b;
+  --foreground: #f4f4f5;
+  --card: #111114;
+  --card-foreground: #f4f4f5;
+  --popover: #111114;
+  --popover-foreground: #f4f4f5;
+  --primary: #f4f4f5;
+  --primary-foreground: #09090b;
+  --secondary: #18181d;
+  --secondary-foreground: #f4f4f5;
+  --muted: #16161b;
+  --muted-foreground: #8f8f9c;
+  --accent: #1e1e24;
+  --accent-foreground: #f4f4f5;
+  --destructive: #f43f5e;
+  --destructive-foreground: #ffffff;
+  --border: #22222a;
+  --divider: rgba(255, 255, 255, 0.08);
+  --input: #22222a;
+  --ring: #8f8f9c;
 
-  /* Accent hover system (dark theme) */
-  --accent-hover-border: rgba(251, 191, 36, 0.45);
-  --accent-hover-bg: rgba(64, 64, 64, 0.35);
-  --accent-icon-border: rgba(251, 191, 36, 0.35);
-  --accent-icon-bg: rgba(245, 158, 11, 0.12);
-  --accent-icon-fg: #fde68a;
-  --accent-arrow-fg: rgba(251, 191, 36, 0.9);
-  
- --radius: 0.35rem;
-  --shadow-x: 0px;
-  --shadow-y: 2px;
-  --shadow-blur: 0px;
-  --shadow-spread: 0px;
-  --shadow-opacity: 0.15;
-  
-  --shadow-color: hsl(0 0% 0%);
-  --shadow-2xs: 0px 1px 0px 0px hsl(0 0% 0% / 0.00);
-  --shadow-xs: 0px 1px 0px 0px hsl(0 0% 0% / 0.00);
-  --shadow-sm: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 1px 2px -1px hsl(0 0% 0% / 0.00);
-  --shadow: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 1px 2px -1px hsl(0 0% 0% / 0.00);
-  --shadow-md: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 2px 4px -1px hsl(0 0% 0% / 0.00);
-  --shadow-lg: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 4px 6px -1px hsl(0 0% 0% / 0.00);
-  --shadow-xl: 0px 1px 0px 0px hsl(0 0% 0% / 0.00), 0px 8px 10px -1px hsl(0 0% 0% / 0.00);
-  --shadow-2xl: 0px 1px 0px 0px hsl(0 0% 0% / 0.00);
+  --accent-hover-border: rgba(255, 255, 255, 0.16);
+  --accent-hover-bg: rgba(255, 255, 255, 0.04);
+  --accent-icon-border: rgba(255, 255, 255, 0.12);
+  --accent-icon-bg: rgba(255, 255, 255, 0.06);
+  --accent-icon-fg: #ffffff;
+  --accent-arrow-fg: rgba(255, 255, 255, 0.85);
 }
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -146,21 +91,9 @@ html {
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
+  --color-divider: var(--divider);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
 
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
@@ -170,15 +103,51 @@ html {
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-
-  --shadow-2xs: var(--shadow-2xs);
-  
-  --shadow-xs: var(--shadow-xs);
-  --shadow-sm: var(--shadow-sm);
-  --shadow: var(--shadow);
-  --shadow-md: var(--shadow-md);
-  --shadow-lg: var(--shadow-lg);
-  --shadow-xl: var(--shadow-xl);
-  --shadow-2xl: var(--shadow-2xl);
 }
 
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.italic-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
+.italic-flourish {
+  font-family: var(--font-serif);
+  font-style: italic;
+  letter-spacing: -0.01em;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-feature-settings: "rlig" 1, "calt" 1, "cv02" 1, "cv03" 1, "cv04" 1, "cv11" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hairline dividers and craftsmanship borders */
+.border-divider {
+  border-color: var(--divider);
+}
+
+.craft-link {
+  position: relative;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--divider);
+  transition: text-decoration-color 0.15s ease, color 0.15s ease;
+}
+
+.craft-link:hover {
+  text-decoration-color: var(--foreground);
+  color: var(--foreground);
+}
+
+/* Tabular figures for stats and clocks */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}

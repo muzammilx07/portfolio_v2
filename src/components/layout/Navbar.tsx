@@ -1,52 +1,80 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Search } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
-import SearchButton from "@/components/command/SearchButton";
 import SearchModal from "@/components/command/SearchModal";
+import { useCommandStore } from "@/lib/store/commandStore";
 import { navigation } from "@/config/navigation";
-import { siteConfig } from "@/config/site";
-import HoverUnderline from "@/components/shared/HoverUnderline";
-import PillLink, { pillLinkBaseClass } from "@/components/shared/PillLink";
 
 export default function Navbar() {
+  const pathname = usePathname();
+  const openSearch = useCommandStore((state) => state.open);
+
   return (
-    <nav
-      className="sticky top-0 z-50 w-full border-b border-dashed border-border/70 bg-background/80 text-foreground backdrop-blur-xl shadow-sm"
-      aria-label="Primary"
-    >
-      <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-3 sm:px-6">
+    <>
+      <nav
+        className="flex items-center justify-between py-5 text-sm"
+        aria-label="Main Navigation"
+      >
         <Link
           href="/"
-          className="group flex items-center gap-3 text-sm font-semibold tracking-tight text-foreground"
-          aria-label={`${siteConfig.name} home`}
+          className="group flex items-center gap-2 font-mono text-xs transition-opacity hover:opacity-90 active:scale-95"
+          aria-label="Home"
         >
-          <span>{siteConfig.name}</span>
+          <div className="flex h-7 items-center gap-1.5 rounded-lg border border-divider bg-card/70 px-2 py-1 shadow-2xs transition-all duration-200 group-hover:border-foreground/30 group-hover:bg-muted/80">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            </span>
+            <span className="font-semibold tracking-wider text-foreground text-[11px]">MS</span>
+          </div>
+          <span className="text-[10px] tracking-widest text-muted-foreground/70 uppercase">
+            // 07
+          </span>
         </Link>
-        <div className="flex items-center gap-3 sm:gap-5">
-          <ul className="hidden items-center gap-4 text-sm font-medium md:flex">
-            {navigation.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="rounded-sm text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                >
-                  <HoverUnderline
-                    className="text-muted-foreground transition-colors hover:text-[color:var(--accent-icon-fg)]"
-                    underlineClassName="-bottom-2 bg-foreground/70 group-hover:bg-[color:var(--accent-icon-fg)]"
+
+        <div className="flex items-center gap-4 sm:gap-6">
+          <ul className="flex items-center gap-4 text-xs font-normal text-muted-foreground sm:gap-5 sm:text-sm">
+            {navigation.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className={`transition-colors hover:text-foreground ${
+                      isActive
+                        ? "text-foreground font-medium underline underline-offset-6 decoration-1 decoration-foreground"
+                        : ""
+                    }`}
                   >
-                    {link.label}
-                  </HoverUnderline>
-                </Link>
-              </li>
-            ))}
+                    {item.label}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
-          <SearchButton
-            className={`${pillLinkBaseClass} hidden gap-3 md:flex`}
-          />
-         
-          <ThemeToggle className={pillLinkBaseClass} />
+
+          <div className="flex items-center gap-2 border-l border-divider pl-3">
+            <button
+              type="button"
+              onClick={openSearch}
+              aria-label="Search site (Cmd+K)"
+              className="flex items-center gap-1.5 h-8 px-2 rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground cursor-pointer"
+              title="Search site (Cmd+K)"
+            >
+              <Search className="h-3.5 w-3.5" />
+              <kbd className="hidden sm:inline-block text-[10px] font-mono rounded border border-divider px-1 text-muted-foreground">
+                ⌘K
+              </kbd>
+            </button>
+
+            <ThemeToggle />
+          </div>
         </div>
-      </div>
+      </nav>
       <SearchModal />
-    </nav>
+    </>
   );
 }

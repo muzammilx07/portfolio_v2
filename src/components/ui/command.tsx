@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Command as CommandPrimitive } from "cmdk";
 import { cn } from "@/lib/utils";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -12,7 +12,7 @@ const Command = React.forwardRef<
   <CommandPrimitive
     ref={ref}
     className={cn(
-      "flex h-full w-full flex-col overflow-hidden rounded-2xl bg-zinc-950 text-zinc-50",
+      "flex h-full w-full flex-col overflow-hidden rounded-xl bg-card text-foreground border border-divider shadow-xl",
       className,
     )}
     {...props}
@@ -26,8 +26,10 @@ interface CommandDialogProps extends React.ComponentPropsWithoutRef<typeof Dialo
 
 const CommandDialog = ({ children, className, ...props }: CommandDialogProps) => (
   <Dialog {...props}>
-    <DialogContent className={cn("overflow-hidden p-0", className)}>
-      <Command className="rounded-2xl">{children}</Command>
+    <DialogContent className={cn("overflow-hidden p-0 border-none bg-transparent shadow-2xl", className)}>
+      <DialogTitle className="sr-only">Quick Search Palette</DialogTitle>
+      <DialogDescription className="sr-only">Search projects, articles, actions and social links</DialogDescription>
+      <Command className="rounded-xl">{children}</Command>
     </DialogContent>
   </Dialog>
 );
@@ -39,7 +41,7 @@ const CommandInput = React.forwardRef<
   <CommandPrimitive.Input
     ref={ref}
     className={cn(
-      "w-full rounded-md bg-transparent px-4 py-3 text-sm text-zinc-50 outline-none placeholder:text-zinc-400 focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950",
+      "w-full rounded-md bg-transparent px-4 py-3 text-sm text-foreground outline-none placeholder:text-muted-foreground",
       className,
     )}
     {...props}
@@ -53,7 +55,7 @@ const CommandList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.List
     ref={ref}
-    className={cn("max-h-[420px] overflow-y-auto p-2", className)}
+    className={cn("max-h-[380px] overflow-y-auto p-1.5", className)}
     {...props}
   />
 ));
@@ -62,10 +64,10 @@ CommandList.displayName = CommandPrimitive.List.displayName;
 const CommandEmpty = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Empty>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Empty>
->(({ className, ...props }, ref) => (
+>((props, ref) => (
   <CommandPrimitive.Empty
     ref={ref}
-    className={cn("px-3 py-6 text-center text-sm text-zinc-400", className)}
+    className="py-6 text-center text-xs text-muted-foreground"
     {...props}
   />
 ));
@@ -78,7 +80,7 @@ const CommandGroup = React.forwardRef<
   <CommandPrimitive.Group
     ref={ref}
     className={cn(
-      "px-2 py-2 text-xs text-zinc-400 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:pb-1 [&_[cmdk-group-heading]]:pt-2 [&_[cmdk-group-heading]]:text-[11px] [&_[cmdk-group-heading]]:font-semibold [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-widest",
+      "overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-[10px] [&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:font-semibold [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group-heading]]:tracking-wider",
       className,
     )}
     {...props}
@@ -92,7 +94,7 @@ const CommandSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.Separator
     ref={ref}
-    className={cn("mx-3 my-1 h-px bg-white/10", className)}
+    className={cn("-mx-1 my-1 h-px bg-divider", className)}
     {...props}
   />
 ));
@@ -105,7 +107,7 @@ const CommandItem = React.forwardRef<
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
-      "flex cursor-pointer select-none items-center gap-3 rounded-xl px-3 py-2 text-sm text-zinc-300 outline-none transition data-[selected=true]:bg-white/10 data-[selected=true]:text-zinc-50 data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
+      "relative flex cursor-pointer select-none items-center rounded-lg px-2.5 py-2 text-sm outline-none transition-colors data-[disabled=true]:pointer-events-none data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-[disabled=true]:opacity-50",
       className,
     )}
     {...props}

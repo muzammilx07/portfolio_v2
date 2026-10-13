@@ -1,186 +1,173 @@
 "use client";
 
 import { useState } from "react";
-import { Linkedin, Link2, X } from "lucide-react";
-import {
-  SiDocker,
-  SiGit,
-  SiNextdotjs,
-  SiPostgresql,
-  SiReact,
-  SiTailwindcss,
-  SiTypescript,
-} from "react-icons/si";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown } from "lucide-react";
 
-const experiences = [
+interface ExperienceItem {
+  company: string;
+  role: string;
+  period: string;
+  location: string;
+  isCurrent?: boolean;
+  summary: string;
+  achievements: string[];
+  skills: string[];
+}
+
+const experiences: ExperienceItem[] = [
   {
-    role: "Frontend Engineer",
-    company: "Nimbus Studio",
-    dates: "Jan 2024 - Present",
-    location: "Remote",
-    status: "Currently Shipping",
+    company: "Blackbuck",
+    role: "Frontend Developer Intern",
+    period: "Jan 2026 — Mar 2026",
+    location: "Hyderabad, IN",
+    isCurrent: true,
     summary:
-      "Lead UI systems for a multi-tenant dashboard with performance budgets and design tokens.",
-    highlights: [
-      "Built component library used across 4 products",
-      "Reduced bundle size by 22% with route-level splitting",
+      "Engineered real-time dashboard interfaces bridging machine learning predictions with operational review workflows.",
+    achievements: [
+      "Shipped responsive React.js interfaces for 3 core AI/ML features, eliminating manual data-review bottlenecks for operations staff.",
+      "Architected async FastAPI pipelines connecting model inference endpoints with sub-200ms round-trip latency.",
+      "Collaborated closely with ML engineers and product managers to ensure seamless integration and timely production rollout.",
     ],
-    stack: ["React", "TypeScript", "Next.js", "Tailwind", "Git"],
+    skills: [
+      "React.js",
+      "FastAPI",
+      "Python",
+      "RESTful APIs",
+      "JavaScript",
+      "Git",
+    ],
   },
   {
-    role: "UI Engineer",
-    company: "Pixel Harbor",
-    dates: "May 2021 - May 2022",
-    location: "Remote",
-    status: "Archived",
+    company: "Zatokshi Ventures",
+    role: "Frontend Developer (UI/UX)",
+    period: "Sep 2024 — Feb 2025",
+    location: "Hyderabad, IN",
+    isCurrent: false,
     summary:
-      "Crafted marketing and product pages with strong accessibility and SEO.",
-    highlights: [
-      "Set up design QA checklist and page audits",
-      "Created motion system for product launches",
+      "Designed and developed customer-facing web applications, responsive component libraries, and interactive 3D elements.",
+    achievements: [
+      "Decreased average page turnaround time by 40% using modular, atomic React component hierarchies.",
+      "Embedded lightweight 3D WebGL modules to deliver interactive product storytelling without compromising FPS.",
+      "Improved route speed by 30% through dynamic code-splitting, lazy route hydration, and asset budget optimization.",
+      "Established reusable UI design tokens across mobile and desktop viewports to maintain strict visual ergonomics.",
     ],
-    stack: ["React", "Tailwind", "Git"],
+    skills: [
+      "React.js",
+      "Tailwind CSS",
+      "WebGL",
+      "JavaScript",
+      "HTML5",
+      "CSS3",
+      "Git",
+    ],
   },
 ];
 
-const stackIcons: Record<string, React.ComponentType<{ className?: string }>> = {
-  React: SiReact,
-  TypeScript: SiTypescript,
-  "Next.js": SiNextdotjs,
-  Tailwind: SiTailwindcss,
-  Postgres: SiPostgresql,
-  Docker: SiDocker,
-  Git: SiGit,
-};
-
 export default function Experience() {
-  const [openIndex, setOpenIndex] = useState(0);
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
+
+  const toggle = (idx: number) => {
+    setExpandedIndex((prev) => (prev === idx ? null : idx));
+  };
 
   return (
-    <section className="border-l border-r border-dashed border-border text-foreground">
-      <div className="flex flex-row">
-        <div className="w-1/2 rounded-br-4xl border-b border-r border-dashed border-border px-6 py-4">
-          <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-            Work
-          </p>
-          <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
-            Experience
-          </h2>
-        </div>
-        <div className="w-1/2" />
+    <section
+      id="experience"
+      className="space-y-4 pb-10 sm:pb-14 border-t border-divider pt-10"
+    >
+      <div className="flex items-center justify-between">
+        <h2 className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
+          Experience{" "}
+          <span className="font-serif italic text-xs lowercase text-muted-foreground/80 font-normal">
+            — career trajectory
+          </span>
+        </h2>
+        <span className="text-xs font-mono text-muted-foreground">
+          2+ Years Shipping
+        </span>
       </div>
 
-      <div className="mt-6 p-5 sm:p-6">
-        <div className="grid gap-4">
-          {experiences.map((item, index) => {
-            const isOpen = openIndex === index;
-            const detailsId = `experience-${index}-details`;
+      <div className="divide-y divide-divider">
+        {experiences.map((exp, idx) => {
+          const isExpanded = expandedIndex === idx;
 
-            return (
-              <article
-                key={`${item.company}-${item.role}`}
-                className="group relative flex h-full flex-col gap-3 rounded-2xl border border-dashed border-border bg-background/70 p-4 transition-colors transition-transform duration-300 hover:-translate-y-0.5 hover:border-[color:var(--accent-hover-border)] hover:bg-[color:var(--accent-hover-bg)]"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 text-xs font-semibold text-foreground">
-                      {item.company.slice(0, 2)}
-                    </div>
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-base font-semibold text-foreground">
-                          {item.company}
-                        </h3>
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                          <X className="h-3.5 w-3.5" aria-hidden="true" />
-                          <Linkedin className="h-3.5 w-3.5" aria-hidden="true" />
-                          <Link2 className="h-3.5 w-3.5" aria-hidden="true" />
-                        </div>
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        {item.role}
-                      </p>
-                    </div>
+          return (
+            <div
+              key={exp.company}
+              className="group -mx-3 px-3 py-4 rounded-xl transition-colors hover:bg-muted/40 cursor-pointer"
+              onClick={() => toggle(idx)}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-medium text-foreground">
+                      {exp.company}
+                    </h3>
+                    {exp.isCurrent && (
+                      <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-mono text-emerald-600 dark:text-emerald-400">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        Current
+                      </span>
+                    )}
                   </div>
-                  <div className="text-right text-xs text-muted-foreground">
-                    <p>{item.dates}</p>
-                    <p>{item.location}</p>
-                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    <span className="font-serif italic text-foreground text-[15px] font-normal">
+                      {exp.role}
+                    </span>{" "}
+                    · {exp.location}
+                  </p>
                 </div>
 
-                {isOpen ? (
-                  <div id={detailsId} className="space-y-3">
-                    <p className="text-sm text-muted-foreground">
-                      {item.summary}
-                    </p>
-                    <ul className="space-y-1 text-xs text-muted-foreground">
-                      {item.highlights.map((highlight) => (
-                        <li key={highlight}>• {highlight}</li>
-                      ))}
-                    </ul>
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-                        Skills
+                <div className="flex items-center gap-2">
+                  <time className="text-xs font-mono tabular-nums text-muted-foreground">
+                    {exp.period}
+                  </time>
+                  <ChevronDown
+                    className={`size-4 text-muted-foreground transition-transform duration-200 ${
+                      isExpanded ? "rotate-180 text-foreground" : ""
+                    }`}
+                  />
+                </div>
+              </div>
+
+              <AnimatePresence initial={false}>
+                {isExpanded && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    className="overflow-hidden"
+                  >
+                    <div className="pt-3 space-y-3">
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {exp.summary}
                       </p>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {item.stack.map((tech) => {
-                          const Icon = stackIcons[tech];
-                          return (
-                            <span
-                              key={tech}
-                              className="inline-flex items-center gap-2 rounded-full border border-dashed border-border bg-muted/30 px-2.5 py-1 text-xs text-muted-foreground transition-colors group-hover:border-[color:var(--accent-hover-border)] group-hover:text-[color:var(--accent-icon-fg)]"
-                            >
-                              {Icon ? (
-                                <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-                              ) : null}
-                              {tech}
-                            </span>
-                          );
-                        })}
+
+                      <ul className="space-y-1.5 text-xs text-muted-foreground list-disc pl-4">
+                        {exp.achievements.map((item, i) => (
+                          <li key={i}>{item}</li>
+                        ))}
+                      </ul>
+
+                      <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                        {exp.skills.map((skill) => (
+                          <span
+                            key={skill}
+                            className="inline-block rounded border border-divider px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground"
+                          >
+                            {skill}
+                          </span>
+                        ))}
                       </div>
                     </div>
-                    <span className="inline-flex items-center gap-2 rounded-full border border-dashed border-border bg-muted/30 px-3 py-1 text-xs text-muted-foreground">
-                      <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                      {item.status}
-                    </span>
-                  </div>
-                ) : (
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-                      Skills
-                    </p>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {item.stack.map((tech) => {
-                        const Icon = stackIcons[tech];
-                        return (
-                          <span
-                            key={tech}
-                            className="inline-flex items-center gap-2 rounded-full border border-dashed border-border bg-muted/30 px-2.5 py-1 text-xs text-muted-foreground transition-colors group-hover:border-[color:var(--accent-hover-border)] group-hover:text-[color:var(--accent-icon-fg)]"
-                          >
-                            {Icon ? (
-                              <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-                            ) : null}
-                            {tech}
-                          </span>
-                        );
-                      })}
-                    </div>
-                  </div>
+                  </motion.div>
                 )}
-
-                <button
-                  type="button"
-                  aria-expanded={isOpen}
-                  aria-controls={detailsId}
-                  onClick={() => setOpenIndex(isOpen ? -1 : index)}
-                  className="inline-flex items-center gap-2 self-start rounded-full border border-dashed border-border bg-muted/30 px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-[color:var(--accent-hover-border)] hover:bg-[color:var(--accent-hover-bg)] hover:text-[color:var(--accent-icon-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                >
-                  {isOpen ? "Collapse" : "Expand"} Details →
-                </button>
-              </article>
-            );
-          })}
-        </div>
+              </AnimatePresence>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

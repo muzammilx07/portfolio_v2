@@ -1,0 +1,123 @@
+---
+title: "Engineering Real-Time Threat Streams: WebSockets, XGBoost & CICIDS"
+date: "2026-02-15"
+summary: "Inside the AI SOC Platform architecture: transforming raw network logs into live threat telemetry, confidence scoring with Isolation Forests, and automated incident playbooks."
+tags: ["WebSockets", "FastAPI", "Machine Learning", "Cybersecurity", "XGBoost"]
+---
+
+Modern Security Operations Centers (SOC) process thousands of raw network packets per second. When building the **AI SOC Platform**, our objective was to eliminate alert fatigue by ingesting raw event logs, performing real-time ML anomaly detection, and streaming confidence-scored threats straight to operator browsers via bi-directional WebSockets.
+
+Here is the architectural anatomy of how we transformed noisy packet streams into automated security actions.
+
+---
+
+### The Ingestion Pipeline: From Syslog to Threat Graph
+
+A traditional polling architecture collapses under high-throughput network monitoring. Instead, our pipeline utilizes an asynchronous producer-consumer queue in Python:
+
+```
+[Raw Network Logs] ──> [FastAPI WebSocket Ingestion]
+                             │
+                             ▼
+                 [Feature Extraction (CICIDS Schema)]
+                             │
+                             ▼
+                 [Ensemble Scoring: Isolation Forest + XGBoost]
+                             │
+                  ┌──────────┴──────────┐
+                  ▼                     ▼
+       (Confidence > 0.85)    (Confidence < 0.85)
+                  │                     │
+                  ▼                     ▼
+      [Automated Playbook]     [Streamed to Operator]
+```
+
+---
+
+### Machine Learning Ensemble on CICIDS
+
+To avoid single-model blindspots, we trained an ensemble on the **CICIDS dataset** consisting of:
+
+1. **Isolation Forest**: Unsupervised boundary estimation for zero-day behavioral anomalies.
+2. **XGBoost Classifier**: Supervised classification for known threat vectors (DDoS, Port Scans, SQL Injection, Brute Force).
+3. **Random Forest**: Cross-validation check on flow-level statistical parameters (packet size variance, inter-arrival intervals).
+
+```python
+# Real-Time Scoring Engine
+import numpy as np
+from typing import Dict, Any
+
+class ThreatEvaluator:
+    def __init__(self, xgb_model, iforest_model):
+        self.xgb = xgb_model
+        self.iforest = iforest_model
+
+    def evaluate_packet_flow(self, flow_features: np.ndarray) -> Dict[str, Any]:
+        # 1. Check statistical outlier status
+        anomaly_score = self.iforest.decision_function([flow_features])[0]
+        
+        # 2. Supervised classification
+        class_probs = self.xgb.predict_proba([flow_features])[0]
+        top_threat_idx = np.argmax(class_probs)
+        confidence = float(class_probs[top_threat_idx])
+
+        is_threat = confidence > 0.82 or anomaly_score < -0.25
+
+        return {
+            "is_threat": is_threat,
+            "threat_type": self.xgb.classes_[top_threat_idx] if is_threat else "BENIGN",
+            "confidence": round(confidence, 3),
+            "anomaly_score": round(float(anomaly_score), 3),
+        }
+```
+
+---
+
+### Bi-Directional WebSocket Broadcast to Next.js
+
+When an anomaly triggers, the operator client needs to receive the telemetry without re-fetching. In FastAPI:
+
+```python
+@app.websocket("/ws/threat-stream")
+async def websocket_threat_endpoint(websocket: WebSocket):
+    await manager.connect(websocket)
+    try:
+        while True:
+            # Stream scored threat events to connected SOC analysts
+            event = await threat_queue.get()
+            if event["confidence"] > 0.70:
+                await websocket.send_json(event)
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)
+```
+
+In the Next.js frontend, we manage packet stream buffers using a circular queue to maintain 60 FPS UI rendering without memory leaks:
+
+```tsx
+export function useThreatStream() {
+  const [threats, setThreats] = useState<ThreatEvent[]>([]);
+
+  useEffect(() => {
+    const ws = new WebSocket(process.env.NEXT_PUBLIC_SOC_WS_URL!);
+
+    ws.onmessage = (event) => {
+      const newThreat: ThreatEvent = JSON.parse(event.data);
+      setThreats((prev) => [newThreat, ...prev.slice(0, 49)]); // Fixed ring-buffer
+    };
+
+    return () => ws.close();
+  }, []);
+
+  return threats;
+}
+```
+
+---
+
+### Automated Playbook Responses
+
+When a threat's confidence score exceeds `0.92`, the system automatically invokes an incident lifecycle handler:
+- **Isolate**: Revokes internal service tokens for the source identifier.
+- **Escalate**: Generates a categorized incident record in PostgreSQL via SQLAlchemy.
+- **Notify**: Pushes structured alert payloads to on-call channels with deep links directly into the investigation timeline.
+

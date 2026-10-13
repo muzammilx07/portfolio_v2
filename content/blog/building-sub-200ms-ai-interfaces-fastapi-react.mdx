@@ -1,0 +1,100 @@
+---
+title: "Architecting Sub-200ms AI Interfaces: Bridging FastAPI and React"
+date: "2026-03-01"
+summary: "How we eliminated manual review steps by integrating asynchronous ML inference pipelines with optimistic UI updates and sub-200ms latency budgets."
+tags: ["FastAPI", "React", "AI/ML", "Performance", "Python"]
+---
+
+Integrating machine learning inference outputs into live user interfaces is traditionally plagued by high latency, blocking requests, and clunky loading spinners. During my frontend engineering work integrating AI/ML features with FastAPI backends, our primary constraint was straightforward: **the user interface must respond in under 200 milliseconds**, regardless of model inference complexity.
+
+Here is how we architected the data flow between React and FastAPI to turn slow predictive workflows into instant, fluid operator experiences.
+
+---
+
+### The Bottleneck: Synchronous Model Blocking
+
+When an operations team reviews AI-scored data, synchronous request-response cycles fail:
+
+1. The client submits an evaluation payload via HTTP POST.
+2. The server blocks while transforming tensors, generating embeddings, and querying the model weights.
+3. The client hangs for 800ms to 2.5s, forcing operators to wait before reviewing the next item.
+
+Across hundreds of items per shift, this lag accumulates into substantial operator fatigue and backlog queues.
+
+---
+
+### Strategy 1: Asynchronous Execution & Predictive Prefetching
+
+Rather than running inference synchronously on the active route, we decoupled feature preprocessing from UI interaction:
+
+```python
+# FastAPI Async Prediction Route
+from fastapi import FastAPI, BackgroundTasks, Depends
+from pydantic import BaseModel
+
+app = FastAPI()
+
+class InferencePayload(BaseModel):
+    record_id: str
+    feature_vector: list[float]
+
+@app.post("/api/v1/ml/predict-batch")
+async def evaluate_features(
+    payload: InferencePayload,
+    background_tasks: BackgroundTasks
+):
+    # Immediate cache check for warm embeddings
+    cached_score = await cache.get(payload.record_id)
+    if cached_score:
+        return {"status": "hit", "score": cached_score, "latency_ms": 12}
+
+    # Queue background inference and return partial heuristics
+    background_tasks.add_task(async_model_worker, payload)
+    return {"status": "processing", "estimated_ms": 140}
+```
+
+By pre-calculating feature vectors on idle cycles and maintaining an in-memory Redis layer for frequently evaluated entity types, over 80% of inspection requests responded in **sub-25ms**.
+
+---
+
+### Strategy 2: Optimistic UI States in React
+
+On the frontend, waiting for confirmation before re-rendering creates perceived sluggishness. We implemented optimistic state updates combined with granular error rollbacks:
+
+```tsx
+export function useOptimisticEvaluation(recordId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (action: "approve" | "flag" | "re-score") =>
+      api.post(`/ml/records/${recordId}/action`, { action }),
+    onMutate: async (newAction) => {
+      await queryClient.cancelQueries({ queryKey: ["record", recordId] });
+      const previousState = queryClient.getQueryData(["record", recordId]);
+
+      // Optimistically advance operator workflow immediately
+      queryClient.setQueryData(["record", recordId], (old: any) => ({
+        ...old,
+        status: newAction,
+        reviewedAt: new Date().toISOString(),
+      }));
+
+      return { previousState };
+    },
+    onError: (err, newAction, context) => {
+      // Graceful rollback if background worker fails
+      queryClient.setQueryData(["record", recordId], context?.previousState);
+      toast.error("Telemetry sync failed. Restoring queue state.");
+    },
+  });
+}
+```
+
+---
+
+### Measurable Results
+
+1. **Sub-200ms end-to-end response**: 95th percentile latency dropped from 1.2s to 168ms.
+2. **Reduced manual review steps**: Direct integration of model outputs removed redundant verification steps for the operations team.
+3. **Zero UI freezing**: Decoupled async queues prevented React reconciliation hiccups during large batch updates.
+

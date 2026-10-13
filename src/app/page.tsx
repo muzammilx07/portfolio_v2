@@ -1,18 +1,16 @@
-import CTASection from "@/components/home/CTASection";
-import FeaturedProjects from "@/components/home/FeaturedProjects";
 import Hero from "@/components/home/Hero";
-import RecentBlog from "@/components/home/RecentBlog";
-import SkillsShowcase from "@/components/home/SkillsShowcase";
-import About from "@/components/home/About";
+import FeaturedProjects from "@/components/home/FeaturedProjects";
 import Experience from "@/components/home/Experience";
+import SkillsShowcase from "@/components/home/SkillsShowcase";
+import RecentBlog from "@/components/home/RecentBlog";
+import CTASection from "@/components/home/CTASection";
 
 export default function Page() {
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col">
       <Hero />
-      <About />
-      <Experience />
       <FeaturedProjects />
+      <Experience />
       <SkillsShowcase />
       <RecentBlog />
       <CTASection />

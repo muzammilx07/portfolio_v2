@@ -1,42 +1,66 @@
+"use client";
+
 import Link from "next/link";
 
 const posts = [
   {
-    title: "Shipping fast with Next.js App Router",
-    date: "Feb 2026",
+    title: "Architecting Sub-200ms AI Interfaces: Bridging FastAPI and React",
+    date: "Mar 2026",
+    href: "/blog/building-sub-200ms-ai-interfaces-fastapi-react",
+    readTime: "5 min",
   },
   {
-    title: "Designing motion-first interfaces",
+    title: "Engineering Real-Time Threat Streams: WebSockets, XGBoost & CICIDS",
+    date: "Feb 2026",
+    href: "/blog/realtime-threat-telemetry-websockets-xgboost",
+    readTime: "6 min",
+  },
+  {
+    title:
+      "Designing Lightweight Cross-Origin Embeddable Widgets in Next.js 14",
     date: "Jan 2026",
+    href: "/blog/designing-cross-origin-embeddable-widgets-nextjs14",
+    readTime: "5 min",
   },
 ];
 
 export default function RecentBlog() {
   return (
-    <section className="bg-background px-4 py-10 text-foreground sm:px-6 sm:py-12">
-      <div className="mx-auto max-w-4xl space-y-5">
-        <div>
-          <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-            Writing
-          </p>
-          <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-            Recent Notes
-          </h2>
-        </div>
-        <div className="space-y-2">
-          {posts.map((post) => (
-            <Link
-              key={post.title}
-              href="/blog"
-              className="rounded-xl border border-border bg-card p-4 transition-colors duration-200 hover:border-[color:var(--accent-hover-border)] hover:bg-[color:var(--accent-hover-bg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            >
-              <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-                {post.date}
-              </p>
-              <h3 className="mt-1 text-lg font-semibold">{post.title}</h3>
-            </Link>
-          ))}
-        </div>
+    <section className="space-y-4 pb-10 sm:pb-14 border-t border-divider pt-10">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
+          Writing{" "}
+          <span className="font-serif italic text-xs lowercase text-muted-foreground/80 font-normal">
+            — thoughts on interface craft
+          </span>
+        </h2>
+        <Link
+          href="/blog"
+          className="group inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <span>All notes</span>
+          <span className="transition-transform duration-200 group-hover:translate-x-0.5">
+            →
+          </span>
+        </Link>
+      </div>
+
+      <div className="divide-y divide-divider">
+        {posts.map((post) => (
+          <Link
+            key={post.title}
+            href={post.href}
+            className="group flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4 -mx-3 px-3 py-3 rounded-xl transition-colors hover:bg-muted/40"
+          >
+            <h3 className="text-sm font-medium text-foreground group-hover:underline underline-offset-4 decoration-1 decoration-foreground/40 group-hover:decoration-foreground">
+              {post.title}
+            </h3>
+            <div className="flex items-center gap-3 shrink-0 text-xs font-mono text-muted-foreground">
+              <span>{post.readTime}</span>
+              <time className="tabular-nums">{post.date}</time>
+            </div>
+          </Link>
+        ))}
       </div>
     </section>
   );

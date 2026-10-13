@@ -1,0 +1,149 @@
+---
+title: "Designing Lightweight Cross-Origin Embeddable Widgets in Next.js 14"
+date: "2026-01-20"
+summary: "How FeedbackFlow packages self-contained JS bundles with zero CLS layout shifts, unique API key tenancy, and JWT-authenticated cross-origin ingestion."
+tags: ["Next.js 14", "TypeScript", "Prisma", "Architecture", "DevTools"]
+---
+
+Building a third-party script that runs safely inside other people's web applications is one of the strictest engineering challenges in web development. The widget must not leak CSS into the host, must not collide with global JavaScript variables, must not degrade Core Web Vitals (CLS/LCP), and must securely ingest data across origins.
+
+When building **FeedbackFlow**, we architected a lightweight, embeddable widget platform with Next.js 14, TypeScript, and Prisma ORM. Here is how we solved cross-origin isolation and multi-tenant security.
+
+---
+
+### The Architecture: Self-Contained Bundle Delivery
+
+Clients embed the widget via a single non-blocking `<script>` tag:
+
+```html
+<script
+  defer
+  src="https://feedbackflow.dev/widget.js"
+  data-project-key="ff_live_94827af9"
+></script>
+```
+
+When this script loads:
+1. It validates the `data-project-key` with our Next.js edge API.
+2. It mounts inside an isolated **Shadow DOM root** (`attachShadow({ mode: "open" })`) to prevent host site stylesheets from bleeding into the widget or vice-versa.
+3. It renders an accessible trigger button with zero Cumulative Layout Shift (CLS).
+
+```typescript
+// Client-side Shadow DOM Initialization
+export function mountFeedbackWidget(projectKey: string) {
+  const container = document.createElement("div");
+  container.id = "feedbackflow-root";
+  document.body.appendChild(container);
+
+  const shadow = container.attachShadow({ mode: "open" });
+  
+  // Inject scoped styles into shadow root
+  const styleTag = document.createElement("style");
+  styleTag.textContent = WIDGET_SCOPED_CSS;
+  shadow.appendChild(styleTag);
+
+  const widgetMount = document.createElement("div");
+  shadow.appendChild(widgetMount);
+
+  render(createWidgetComponent({ projectKey }), widgetMount);
+}
+```
+
+---
+
+### Multi-Tenancy & Schema Design with Prisma
+
+In Next.js 14, our PostgreSQL database schema encapsulates multi-tenant project ownership, authenticated sessions, and feedback ingestion:
+
+```prisma
+// prisma/schema.prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String?
+  projects  Project[]
+  createdAt DateTime  @default(now())
+}
+
+model Project {
+  id         String     @id @default(cuid())
+  name       String
+  apiKey     String     @unique @default(uuid())
+  domain     String     // Allowed origin domain verification
+  userId     String
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  feedbacks  Feedback[]
+  createdAt  DateTime   @default(now())
+}
+
+model Feedback {
+  id         String   @id @default(cuid())
+  projectId  String
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  rating     Int
+  comment    String?
+  metadata   Json?    // Browser, OS, path, viewport dimensions
+  createdAt  DateTime @default(now())
+}
+```
+
+---
+
+### Cross-Origin Ingestion Security
+
+To prevent API abuse and unauthorized submissions:
+- **Domain Verification**: In the edge route handler, we inspect the incoming `Origin` header against the verified `domain` stored in the `Project` record.
+- **Rate Limiting**: In-memory token bucket rate limiting prevents automated scraping or denial-of-service spam.
+- **JWT Admin Access**: Dashboard administrative routes are safeguarded with NextAuth JWT sessions and middleware route matchers.
+
+```typescript
+// src/app/api/v1/ingest/route.ts
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+
+export async function POST(req: NextRequest) {
+  const origin = req.headers.get("origin") || "";
+  const { apiKey, rating, comment, metadata } = await req.json();
+
+  const project = await prisma.project.findUnique({
+    where: { apiKey },
+  });
+
+  if (!project) {
+    return NextResponse.json({ error: "Invalid Project Key" }, { status: 401 });
+  }
+
+  // Enforce origin match in production
+  if (process.env.NODE_ENV === "production" && !origin.includes(project.domain)) {
+    return NextResponse.json({ error: "Unauthorized Origin" }, { status: 403 });
+  }
+
+  const feedback = await prisma.feedback.create({
+    data: {
+      projectId: project.id,
+      rating,
+      comment,
+      metadata,
+    },
+  });
+
+  return NextResponse.json({ success: true, id: feedback.id }, { status: 201 });
+}
+```
+
+---
+
+### Key Takeaways
+1. **Shadow DOM is mandatory** for embeddable components to prevent style collisions.
+2. **Strict origin validation** at the API edge ensures only authorized client domains can ingest data.
+3. Keeping bundle footprint small (~3kB) ensures hosts can drop the widget without degrading their performance budgets.
+
